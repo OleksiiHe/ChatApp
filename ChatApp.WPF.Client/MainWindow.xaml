@@ -1,0 +1,437 @@
+﻿<Window x:Class="ChatApp.WPF.Client.MainWindow"
+        xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+        xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+        xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+        xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+        xmlns:i="http://schemas.microsoft.com/xaml/behaviors"
+        xmlns:local="clr-namespace:ChatApp.WPF.Client"
+        mc:Ignorable="d"
+        Title="ChatApp" Height="600" Width="500" WindowStartupLocation="CenterScreen"
+        d:DataContext="{d:DesignInstance local:MainWindowViewModel}">
+
+    <i:Interaction.Triggers>
+        <i:EventTrigger EventName="Closing">
+            <i:InvokeCommandAction Command="{Binding LogoutCommand}"/>
+        </i:EventTrigger>
+    </i:Interaction.Triggers>
+    
+    <Window.Resources>
+        <!--<Style x:Key="Screen">
+            <Setter Property="Visibility" Value="Hidden"/>
+        </Style>-->
+
+        <!--<Style x:Key="LoginScreen">
+        </Style>-->
+
+        <Style x:Key="TextBlockBase">
+            <Setter Property="TextBlock.Padding" Value="5"/>
+            <!--<Setter Property="TextBlock.Margin" Value="5"/>-->
+            <Setter Property="TextBlock.Foreground" Value="Black"/>
+            <Setter Property="TextBlock.FontSize" Value="14"/>
+        </Style>
+
+        <Style x:Key="HeaderBlock" BasedOn="{StaticResource TextBlockBase}">
+            <Setter Property="TextBlock.HorizontalAlignment" Value="Center"/>
+            <Setter Property="TextBlock.VerticalAlignment" Value="Center"/>
+            <Setter Property="TextBlock.FontWeight" Value="Bold"/>
+            <Setter Property="TextBlock.FontSize" Value="18"/>
+        </Style>
+
+        <Style x:Key="TextBoxBase">
+            <!--<Setter Property="TextBox.Padding" Value="15 10"/>-->
+            <Setter Property="TextBox.Margin" Value="5"/>
+            <Setter Property="TextBox.Background" Value="White"/>
+            <Setter Property="TextBox.Foreground" Value="Black"/>
+            <Setter Property="TextBox.HorizontalAlignment" Value="Center"/>
+            <Setter Property="TextBox.Width" Value="200"/>
+        </Style>
+
+        <Style x:Key="ButtonBase">
+            <Setter Property="Button.Padding" Value="0 3"/>
+            <Setter Property="Button.Margin" Value="5"/>
+            <Setter Property="Button.Background" Value="DeepSkyBlue"/>
+            <Setter Property="Button.Foreground" Value="White"/>
+            <Setter Property="Button.FontWeight" Value="Bold"/>
+            <Setter Property="Button.HorizontalAlignment" Value="Center"/>
+            <Setter Property="Button.FontSize" Value="14"/>
+            <Setter Property="Button.Width" Value="200"/>
+        </Style>
+
+        <Style x:Key="WarningBlock" BasedOn="{StaticResource TextBlockBase}">
+            <Setter Property="TextBlock.Foreground" Value="Red"/>
+            <Setter Property="TextBlock.FontWeight" Value="Bold"/>
+            <Setter Property="TextBlock.HorizontalAlignment" Value="Center"/>
+        </Style>
+
+        <Style x:Key="OtherToUser">
+            <Setter Property="Border.Width" Value="Auto"/>
+            <!--<Setter Property="Border.MinWidth" Value="100"/>-->
+            <Setter Property="Border.MaxWidth" Value="250"/>
+            <!--<Setter Property="Border.Background" Value="RoyalBlue"/>-->
+            <Setter Property="Border.CornerRadius" Value="13"/>
+            <Setter Property="Border.Padding" Value="5"/>
+        </Style>
+
+        <Style x:Key="OtherMessageText">
+            <Setter Property="TextBlock.TextWrapping" Value="Wrap"/>
+            <Setter Property="TextBlock.Foreground" Value="White"/>
+            <Setter Property="TextBlock.FontSize" Value="14"/>
+            <Setter Property="TextBlock.Width" Value="Auto"/>
+            <Setter Property="TextBlock.HorizontalAlignment" Value="Left"/>
+        </Style>
+
+        <Style x:Key="MessageDate">
+            <Setter Property="TextBlock.FontWeight" Value="Light"/>
+            <Setter Property="TextBlock.Foreground" Value="White"/>
+            <Setter Property="TextBlock.FontSize" Value="8"/>
+            <Setter Property="TextBlock.FontStyle" Value="Italic"/>
+            <Setter Property="TextBlock.Width" Value="Auto"/>
+            <Setter Property="TextBlock.HorizontalAlignment" Value="Right"/>
+        </Style>
+
+        <Style x:Key="UserToUser">
+            <Setter Property="Border.Width" Value="Auto"/>
+            <!--<Setter Property="Border.MinWidth" Value="100"/>-->
+            <Setter Property="Border.MaxWidth" Value="250"/>
+            <Setter Property="Border.Background" Value="DeepSkyBlue"/>
+            <Setter Property="Border.CornerRadius" Value="13"/>
+            <Setter Property="Border.Padding" Value="5"/>
+        </Style>
+    </Window.Resources>
+
+    <Grid>
+        <!--<ListView Margin="0 20 0 0"
+                  ItemsSource="{Binding Messages}"
+                  ScrollViewer.HorizontalScrollBarVisibility="Disabled"
+                  ScrollViewer.VerticalScrollBarVisibility="Auto">
+            <ListView.View>
+                <GridView>
+                    <GridViewColumn/>
+                </GridView>
+            </ListView.View>
+            <ItemsControl.ItemTemplate>
+                <DataTemplate DataType="{x:Type local:ChatMessageViewModel}"/>
+            </ItemsControl.ItemTemplate>
+            -->
+        <!--<ListView.ItemTemplate>
+                <DataTemplate>
+                    <TextBlock Text="{Binding TextMessage}"/>
+                </DataTemplate>
+            </ListView.ItemTemplate>-->
+        <!--
+        </ListView>-->
+
+        <Border Name="SignInScreen" 
+                Background="LightSkyBlue"
+                Visibility="{Binding SignInScreenVisibility}">
+            <StackPanel Orientation="Vertical"
+                        VerticalAlignment="Center"
+                        Background="LightSkyBlue">
+                <!--<TextBlock Text="ENTER YOUR NAME"
+                           Style="{StaticResource HeaderBlock}"/>-->
+                <TextBlock Text="ENTER TO THE CHAT"
+                           Style="{StaticResource HeaderBlock}"/>
+                <TextBlock Name="SignInWarningTextBlock" 
+                           Style="{StaticResource WarningBlock}"
+                           Text="{Binding ErrorMessage}"
+                           Visibility="Visible"/>
+                <Label HorizontalAlignment="Center">NAME:</Label>
+                <TextBox Name="LoginTextBox"
+                         FontSize="18"
+                         Style="{StaticResource TextBoxBase}"
+                         Text="{Binding Login, Mode=TwoWay}">
+                    <!--<TextBox.InputBindings>
+                        <KeyBinding Key="Enter" FocusManager.FocusedElement="{Binding SignInPasswordTextBox}"/>
+                    </TextBox.InputBindings>-->
+                </TextBox>
+                <Label HorizontalAlignment="Center">PASSWORD:</Label>
+                <PasswordBox Name="SignInPasswordBox"
+                         FontSize="18"
+                         Style="{StaticResource TextBoxBase}">
+                    <!--<TextBox.InputBindings>
+                        <KeyBinding Key="Enter"/>
+                    </TextBox.InputBindings>-->
+                </PasswordBox>
+                
+                <Button Name="SignInButton"
+                        Style="{StaticResource ButtonBase}"
+                        Content="SIGN IN"
+                        Command="{Binding SignInCommand}"
+                        CommandParameter="{Binding ElementName=SignInPasswordBox}"
+                        IsDefault="True"/>
+                
+                <Label HorizontalAlignment="Center">OR</Label>
+                <Button Name="ToSignUpButton"
+                        Style="{StaticResource ButtonBase}"
+                        Content="SIGN UP"
+                        Background="LightSkyBlue"
+                        Foreground="White"
+                        Command="{Binding ToSignUpCommand}"
+                        IsDefault="True"/>
+            </StackPanel>
+        </Border>
+
+        <Border Name="SignUpScreen" 
+                Background="LightSkyBlue"
+                Visibility="{Binding SignUpScreenVisibility}">
+            <StackPanel Orientation="Vertical"
+                        VerticalAlignment="Center"
+                        Background="LightSkyBlue">
+                <StackPanel.InputBindings>
+                    <KeyBinding Key="Enter"/>
+                </StackPanel.InputBindings>
+                <TextBlock Text="CREATE NEW ACCOUNT"
+                           Style="{StaticResource HeaderBlock}"/>
+                <TextBlock Name="SignUpWarningTextBlock" 
+                           Style="{StaticResource WarningBlock}"
+                           Text="{Binding ErrorMessage}"
+                           Visibility="Visible"/>
+                <Label HorizontalAlignment="Center">NAME:</Label>
+                <TextBox Name="NameTextBox"                         
+                         FontSize="18"
+                         Style="{StaticResource TextBoxBase}"
+                         Text="{Binding Login, Mode=TwoWay}">
+                </TextBox>
+                <Label HorizontalAlignment="Center">E-MAIL:</Label>
+                <TextBox Name="EmailTextBox"                         
+                         FontSize="18"
+                         Style="{StaticResource TextBoxBase}"
+                         Text="{Binding Email, Mode=TwoWay}">
+                </TextBox>
+                <Label HorizontalAlignment="Center">PASSWORD:</Label>
+                <PasswordBox Name="SignUpPasswordTextBox"                         
+                         FontSize="18"
+                         Style="{StaticResource TextBoxBase}"
+                         Password="">
+                </PasswordBox>
+                <Label HorizontalAlignment="Center">CONFIRM PASSWORD:</Label>
+                <PasswordBox Name="ConfirmPasswordTextBox"                         
+                         FontSize="18"
+                         Style="{StaticResource TextBoxBase}"
+                         Password="">
+                </PasswordBox>
+                <Button Name="SignUpButton"
+                        Style="{StaticResource ButtonBase}"
+                        Content="SIGN UP"
+                        Command="{Binding SignUpCommand}"
+                        CommandParameter="{Binding ElementName=ConfirmPasswordTextBox}"
+                        IsDefault="True"/>
+
+
+
+                <!--<TextBlock Text="OR"
+                           Style="{StaticResource HeaderBlock}"/>-->
+                <!--<Button Name="ToSignUpButton"
+                        Style="{StaticResource ButtonBase}"
+                        Content="SIGN UP"
+                        Background="White"
+                        Foreground="Black"
+                        Command="{Binding ToSignInCommand}"
+                        IsDefault="True"/>-->
+
+                <!-- TODO -->
+                <!--<TextBlock Name="WarningTextBlock" 
+                           Style="{StaticResource WarningBlock}"
+                           Text=""
+                           Visibility="Hidden"/>-->
+            </StackPanel>
+        </Border>
+
+
+        <!--<Border Name="TESTSignUpScreen" 
+                Background="LightSkyBlue"
+                Visibility="{Binding SignUpScreenVisibility}">
+
+            <ListBox DataContext="{d:DesignInstance local:SignUpViewModel}">
+                    <ListBox.ItemTemplate>
+                        <DataTemplate>
+                            <ListBoxItem>
+                            <StackPanel Orientation="Vertical"
+                                        VerticalAlignment="Center"
+                                        Background="LightSkyBlue">
+                                <StackPanel.InputBindings>
+                                    <KeyBinding Key="Enter"/>
+                                </StackPanel.InputBindings>
+                                
+                                <TextBlock Text="FILL ALL FIELDS"
+                                           Style="{StaticResource HeaderBlock}"/>
+                                <Label HorizontalAlignment="Center">NAME:</Label>
+                                <TextBox Name="NameTextBox"                         
+                                         FontSize="18"
+                                         Style="{StaticResource TextBoxBase}"
+                                         Text="{Binding Name, Mode=TwoWay}">
+                                </TextBox>
+                                <Label HorizontalAlignment="Center">E-MAIL:</Label>
+                                <TextBox Name="EmailTextBox"                         
+                                         FontSize="18"
+                                         Style="{StaticResource TextBoxBase}"
+                                         Text="{Binding Email, Mode=TwoWay}">
+                                </TextBox>
+                                <Label HorizontalAlignment="Center">PASSWORD:</Label>
+                                <TextBox Name="PasswordTextBox"                         
+                                         FontSize="18"
+                                         Style="{StaticResource TextBoxBase}"
+                                         Text="{Binding Password, Mode=TwoWay}">
+                                </TextBox>
+                                <Label HorizontalAlignment="Center">REPEAT PASSWORD:</Label>
+                                <TextBox Name="ReapeatedPasswordTextBox"                         
+                                         FontSize="18"
+                                         Style="{StaticResource TextBoxBase}"
+                                         Text="{Binding PasswordConfirm, Mode=TwoWay}">
+                                </TextBox>
+                                <Button Name="SignUpButton"
+                                        Style="{StaticResource ButtonBase}"
+                                        Content="SIGN UP"
+                                        Command="{Binding SignUpCommand}"
+                                        CommandParameter="{Binding ElementName=NameTextBox, Path=Text}"
+                                        IsDefault="True"/>
+                            </StackPanel>
+
+                        </ListBoxItem>
+                        </DataTemplate>
+                    </ListBox.ItemTemplate>
+                </ListBox>
+                
+  
+        </Border>-->
+
+
+        <Border Name="ChatScreen" 
+                Background="RoyalBlue"
+                Visibility="{Binding ChatScreenVisibility}">
+            <Grid>
+                <Grid.ColumnDefinitions>
+                    <ColumnDefinition Width="Auto"
+                                      MinWidth="120"
+                                      MaxWidth="200"/>
+                    <ColumnDefinition Width="*"/>
+                </Grid.ColumnDefinitions>
+
+                <Border Grid.Column="0"
+                        BorderThickness="3"
+                        CornerRadius="20">
+                    
+                    <TextBlock Text="Contacts"
+                               Style="{StaticResource HeaderBlock}"
+                               Background="DeepSkyBlue"
+                               FontSize="14"
+                               TextAlignment="Center"
+                               Height="30"
+                               Width="Auto"
+                               VerticalAlignment="Top"
+                               HorizontalAlignment="Stretch"/>
+                </Border>
+
+                <Border Grid.Column="0"
+                        BorderThickness="3">
+                    <ListBox Name="ContactList"
+                             Background="LightSkyBlue"
+                             Height="Auto"
+                             Margin="0 36 0 0"
+                             VerticalAlignment="Stretch"
+                             HorizontalAlignment="Stretch"
+                             ScrollViewer.VerticalScrollBarVisibility="Auto"
+                             ScrollViewer.CanContentScroll="True"
+                             SelectionChanged="ContactList_SelectionChanged"
+                             ItemsSource="{Binding Users}">
+                        <ListBox.ItemTemplate>
+                            <DataTemplate>
+                                <ListBoxItem>
+                                    <DockPanel LastChildFill="True">
+                                        <TextBlock Text="{Binding Name}"
+                                                   Foreground="Black"
+                                                   DockPanel.Dock="Left"
+                                                   FontSize="20"
+                                                   HorizontalAlignment="Left"/>
+                                    </DockPanel>
+                                </ListBoxItem>
+                            </DataTemplate>
+                        </ListBox.ItemTemplate>
+                    </ListBox>
+                </Border>
+
+                <Border Grid.Column="1"
+                        BorderThickness="3"
+                        Background="LightSkyBlue">
+                    <TextBlock Text="ChatApp"
+                               Style="{StaticResource HeaderBlock}"
+                               Background="DeepSkyBlue"
+                               FontSize="14"
+                               TextAlignment="Center"
+                               Height="30"
+                               Width="Auto"
+                               VerticalAlignment="Top"
+                               HorizontalAlignment="Stretch"/>
+                </Border>
+
+                <Border Grid.Column="1"
+                        BorderThickness="3">
+                    <ItemsControl Margin="0 36 0 36"
+                             Background="LightSkyBlue"
+                             VerticalAlignment="Stretch" 
+                             BorderThickness="0"
+                             ItemsSource="{Binding Messages}">
+                        <ItemsControl.Template>
+                            <ControlTemplate>
+                                <ScrollViewer VerticalScrollBarVisibility="Auto"
+                                              ScrollViewer.CanContentScroll="True">
+                                    <ItemsPresenter/>
+                                </ScrollViewer>
+                            </ControlTemplate>
+                        </ItemsControl.Template>
+                        <ItemsControl.ItemTemplate>
+                            <DataTemplate>
+                                    <Border Style="{StaticResource OtherToUser}"
+                                            Background="{Binding Color}"
+                                            HorizontalAlignment="{Binding Alignment}">
+                                        <StackPanel Orientation="Vertical">
+                                            <TextBlock Text="{Binding TextMessage}"
+                                                       Style="{StaticResource OtherMessageText}"/>
+                                            <TextBlock Text="{Binding MessageDate}"
+                                                       Style="{StaticResource MessageDate}"/>
+                                        </StackPanel>
+                                    </Border>
+                            </DataTemplate>
+                        </ItemsControl.ItemTemplate>
+                    </ItemsControl>
+                </Border>
+
+                <Border Grid.Column="1"
+                        BorderThickness="3">
+                    <TextBox Name="MessageTextBox"
+                             Text="{Binding TextMessage}" 
+                             TextWrapping="Wrap" 
+                             TextAlignment="Justify"
+                             VerticalAlignment="Bottom"
+                             HorizontalAlignment="Stretch"
+                             MinHeight="30"
+                             Width="Auto"
+                             Margin="0,0,76,0">
+                        <!--<TextBox.InputBindings>
+                            <KeyBinding Command="{Binding SendChatMessageCommand}"
+                                        Key="Enter"/>
+                        </TextBox.InputBindings>-->
+                    </TextBox>
+                </Border>
+
+                <Border Grid.Column="1"
+                        BorderThickness="3">
+                    <Button Name="SendButton"
+                            Content="Send" 
+                            Style="{StaticResource ButtonBase}"
+                            HorizontalAlignment="Right"  
+                            VerticalAlignment="Bottom"
+                            Padding="0 0"
+                            Margin="0"
+                            Height="30"
+                            Width="70"
+                            Command="{Binding SendChatMessageCommand}"/>
+                </Border>
+
+            </Grid>
+        </Border>
+
+
+
+    </Grid>
+</Window>
